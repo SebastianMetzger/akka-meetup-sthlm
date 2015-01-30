@@ -40,6 +40,9 @@ object BetClient extends App {
     if (args.size > 0 && args.head == "send") {
       bets.foreach(bet ⇒ service ! bet)
       println("*** SENDING OK")
+    } else if (args.size > 0 && args.head == "forever") {
+      import system.dispatcher
+      system.scheduler.schedule(0 milliseconds, 1000 milliseconds, service, "Spam");
     } else {
       implicit val timeout = Timeout(2 seconds)
       val fBets = ask(service, RetrieveBets).mapTo[List[Bet]]
